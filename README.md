@@ -4,6 +4,8 @@ Adds **presets** to Minecraft's Key Binds screen: save whole sets of keys, switc
 
 It works with the cyberdeck: you make a pack's preset in-game, export it, import it on the Deck Panel (Modpacks > Keybind preset), and the deck puts it on the server.
 
+**Download:** [Keybind Presets 1.0.0 on the Releases page](https://github.com/markswansonasher-svg/apache-4800-cyberdeck/releases/tag/keybind-presets-v1.0.0) (one jar for Forge, one for Fabric). Put it in your game's `mods` folder.
+
 ## For players
 
 * **Options > Controls > Key Binds**: there's a new **Preset: … ▾** button at the top left. It opens the Presets screen:
