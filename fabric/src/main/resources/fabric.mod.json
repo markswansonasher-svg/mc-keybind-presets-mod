@@ -1,0 +1,26 @@
+{
+    "schemaVersion": 1,
+    "id": "keybindpresets",
+    "version": "${version}",
+    "name": "${mod_name}",
+    "description": "${description}",
+    "authors": [
+        "${mod_author}"
+    ],
+    "license": "${license}",
+    "environment": "*",
+    "entrypoints": {
+        "main": [
+            "cyberdeck.keybindpresets.KeybindPresetsFabric"
+        ],
+        "client": [
+            "cyberdeck.keybindpresets.KeybindPresetsFabricClient"
+        ]
+    },
+    "depends": {
+        "fabricloader": ">=0.14",
+        "fabric-api": "*",
+        "minecraft": "${minecraft_version}",
+        "java": ">=17"
+    }
+}
