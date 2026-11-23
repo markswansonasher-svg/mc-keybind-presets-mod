@@ -2,9 +2,9 @@
 
 Adds **presets** to Minecraft's Key Binds screen: save whole sets of keys, switch between them, export and import them. A server can offer its own preset, and players with the mod are asked **"Add and switch to the server preset?"** when they join.
 
-It works with the cyberdeck: you make a pack's preset in-game, export it, import it on the Deck Panel (Modpacks > Keybind preset), and the deck puts it on the server.
+**Download:** [the latest release](https://github.com/markswansonasher-svg/mc-keybind-presets-mod/releases/latest) - one jar for Forge, one for Fabric. Put it in your game's `mods` folder.
 
-**Download:** [Keybind Presets 1.0.0 on the Releases page](https://github.com/markswansonasher-svg/apache-4800-cyberdeck/releases/tag/keybind-presets-v1.0.0) (one jar for Forge, one for Fabric). Put it in your game's `mods` folder.
+It was made for the [Apache 4800 cyberdeck](https://github.com/markswansonasher-svg/apache-4800-cyberdeck): you make a modpack's preset in-game, export it, import it on the deck's panel, and the deck puts it on the server. Any server can offer one, though - see [For servers](#for-servers).
 
 ## For players
 
@@ -12,7 +12,7 @@ It works with the cyberdeck: you make a pack's preset in-game, export it, import
   * **Switch to**: use that preset's keys.
   * **Save keys as…**: save the keys you have now as a new preset.
   * **Rename…**, **Delete**
-  * **Export**: writes the preset to `config/keybindpresets/exports/` and opens that folder. Share the file, or import it on the Deck Panel.
+  * **Export**: writes the preset to `config/keybindpresets/exports/` and opens that folder. Share the file, or put it on a server.
   * **Import…**: put a preset file in `config/keybindpresets/import/` (**Open import folder** opens it), then pick it.
 * **Default** is always there: every mod's own keys.
 * **Your keys are never lost.** If you change keys while a preset is on, that preset is updated when you leave Key Binds. If you change them while Default is on, they're saved as a new preset called "My keys".
@@ -20,9 +20,11 @@ It works with the cyberdeck: you make a pack's preset in-game, export it, import
 * Keys a preset doesn't list keep what you have. Keys for mods you don't have are skipped.
 * On Forge, a key can need Shift, Ctrl or Alt held too. Fabric doesn't have that, so it's ignored there.
 
+**Fabric needs Fabric API** (almost every Fabric pack has it). Forge needs nothing extra.
+
 ## For servers
 
-Put the preset at `config/keypresets/server.json` in the server's folder (the cyberdeck does this for you). The format is in the cyberdeck's `docs/keybind-preset-format.md`. The file is re-read when it changes, so no restart is needed.
+Install the mod on the server too, and put the preset at `config/keypresets/server.json` in the server's folder (an exported preset file works as-is). The format is in [docs/keybind-preset-format.md](docs/keybind-preset-format.md). The file is re-read when it changes, so no restart is needed.
 
 The mod is **optional on both sides**:
 * players without it can still join a server that has it, and
@@ -30,23 +32,22 @@ The mod is **optional on both sides**:
 
 ## Building it
 
-You need Java 17 (Eclipse Temurin). In this folder:
+Every push is built and tested by GitHub Actions (the **Actions** tab); the jars are attached to each run.
+
+To build it yourself you need Java 17 (Eclipse Temurin). In this folder:
 
 ```powershell
-$env:JAVA_HOME = 'C:\Program Files\Eclipse Adoptium\jdk-17.0.21.10002-hotspot'
 .\gradlew.bat build
 ```
 
 The mods are in `fabric\build\libs\keybindpresets-fabric-1.20.1-<version>.jar` and `forge\build\libs\keybindpresets-forge-1.20.1-<version>.jar`. Ignore the `-sources` and `-javadoc` jars.
 
-* `.\gradlew.bat :fabric:runClient` (or `:forge:runClient`) starts a test Minecraft with the mod. It uses the `run` folder, and `run\config\keypresets\server.json` makes single-player worlds offer that preset, which is handy for trying the prompt. (Not run on the personal laptop.)
-* `.\gradlew.bat :common:test` runs the unit tests: the preset format, preset storage and the server's preset file. They also read the cyberdeck's `tests\presets\sample-export.json`, so the mod and the Deck Panel stay in step.
+* `.\gradlew.bat :fabric:runClient` (or `:forge:runClient`) starts a test Minecraft with the mod. It uses the `run` folder; put a preset at `run\config\keypresets\server.json` to make single-player worlds offer it, which is handy for trying the prompt.
+* `.\gradlew.bat :common:test` runs the unit tests: the preset format, preset storage and the server's preset file. They read `docs/sample-export.json`, which is the same sample file the cyberdeck's tests use, so the mod and the deck's panel stay in step. Keep the two copies identical.
 
-**Fabric needs Fabric API** (almost every Fabric pack has it). Forge needs nothing extra.
+## Getting it into modpacks
 
-## Getting it into your packs
-
-A CurseForge modpack can only include mods that are on CurseForge. To ship this mod inside your packs, upload both jars to CurseForge as a project (free account). Until then, players add the jar to their game's `mods` folder by hand.
+A CurseForge modpack can only include mods that are on CurseForge. Until this mod is uploaded there, players add the jar to their game's `mods` folder by hand.
 
 ## Code layout
 
@@ -56,4 +57,8 @@ A CurseForge modpack can only include mods that are on CurseForge. To ship this 
   * `client/`: the Presets screen, the join prompt, and applying keys.
 * `fabric/` and `forge/`: each loader's networking, events and Shift/Ctrl/Alt handling.
 
-Built from the MultiLoader-Template by Jared (MIT licence, see LICENSE).
+Started from jaredlll08's [MultiLoader-Template](https://github.com/jaredlll08/MultiLoader-Template).
+
+## Licence
+
+MIT - see [LICENSE](LICENSE).

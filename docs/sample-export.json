@@ -1,0 +1,32 @@
+{
+  "format": "cyberdeck-keys/1",
+  "name": "Cozy Pack test keys",
+  "minecraft": "1.20.1",
+  "_note": "Made by hand to look like the keybind mod's export (the mod doesn't exist yet). A few keys are moved for testing.",
+  "keys": [
+    {"id": "key.attack", "key": "key.mouse.left", "default": "key.mouse.left", "label": "Attack/Destroy", "category": "key.categories.gameplay"},
+    {"id": "key.use", "key": "key.mouse.right", "default": "key.mouse.right", "label": "Use Item/Place Block", "category": "key.categories.gameplay"},
+    {"id": "key.pickItem", "key": "key.mouse.middle", "default": "key.mouse.middle", "label": "Pick Block", "category": "key.categories.gameplay"},
+    {"id": "key.forward", "key": "key.keyboard.w", "default": "key.keyboard.w", "label": "Walk Forwards", "category": "key.categories.movement"},
+    {"id": "key.left", "key": "key.keyboard.a", "default": "key.keyboard.a", "label": "Strafe Left", "category": "key.categories.movement"},
+    {"id": "key.back", "key": "key.keyboard.s", "default": "key.keyboard.s", "label": "Walk Backwards", "category": "key.categories.movement"},
+    {"id": "key.right", "key": "key.keyboard.d", "default": "key.keyboard.d", "label": "Strafe Right", "category": "key.categories.movement"},
+    {"id": "key.jump", "key": "key.keyboard.space", "default": "key.keyboard.space", "label": "Jump", "category": "key.categories.movement"},
+    {"id": "key.sneak", "key": "key.keyboard.left.shift", "default": "key.keyboard.left.shift", "label": "Sneak", "category": "key.categories.movement"},
+    {"id": "key.sprint", "key": "key.keyboard.r", "default": "key.keyboard.left.control", "label": "Sprint", "category": "key.categories.movement"},
+    {"id": "key.drop", "key": "key.keyboard.q", "default": "key.keyboard.q", "label": "Drop Selected Item", "category": "key.categories.inventory"},
+    {"id": "key.inventory", "key": "key.keyboard.e", "default": "key.keyboard.e", "label": "Open/Close Inventory", "category": "key.categories.inventory"},
+    {"id": "key.swapOffhand", "key": "key.keyboard.f", "default": "key.keyboard.f", "label": "Swap Item With Offhand", "category": "key.categories.inventory"},
+    {"id": "key.hotbar.1", "key": "key.keyboard.1", "default": "key.keyboard.1", "label": "Hotbar Slot 1", "category": "key.categories.inventory"},
+    {"id": "key.hotbar.2", "key": "key.keyboard.2", "default": "key.keyboard.2", "label": "Hotbar Slot 2", "category": "key.categories.inventory"},
+    {"id": "key.chat", "key": "key.keyboard.t", "default": "key.keyboard.t", "label": "Open Chat", "category": "key.categories.multiplayer"},
+    {"id": "key.playerlist", "key": "key.keyboard.tab", "default": "key.keyboard.tab", "label": "List Players", "category": "key.categories.multiplayer"},
+    {"id": "key.command", "key": "key.keyboard.slash", "default": "key.keyboard.slash", "label": "Open Command", "category": "key.categories.multiplayer"},
+    {"id": "key.screenshot", "key": "key.keyboard.f2", "default": "key.keyboard.f2", "label": "Take Screenshot", "category": "key.categories.misc"},
+    {"id": "key.togglePerspective", "key": "key.keyboard.f5", "default": "key.keyboard.f5", "label": "Toggle Perspective", "category": "key.categories.misc"},
+    {"id": "key.jei.showRecipe", "key": "key.keyboard.r", "modifier": "SHIFT", "default": "key.keyboard.r", "label": "Show Recipe", "category": "jei.key.category"},
+    {"id": "key.jei.showUses", "key": "key.keyboard.u", "default": "key.keyboard.u", "label": "Show Uses", "category": "jei.key.category"},
+    {"id": "key.minimap.toggle", "key": "key.keyboard.m", "default": "key.keyboard.y", "label": "Toggle Minimap", "category": "key.categories.minimap"},
+    {"id": "key.minimap.waypoint", "key": "key.keyboard.unknown", "default": "key.keyboard.b", "label": "New Waypoint", "category": "key.categories.minimap"}
+  ]
+}

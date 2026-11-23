@@ -26,8 +26,9 @@ dependencies {
 
 test {
     useJUnitPlatform()
-    // the cyberdeck's own sample export: the mod and the Deck Panel must read the same files
-    systemProperty 'deckSample', rootProject.file('../tests/presets/sample-export.json').absolutePath
+    // a sample export - the same file the Apache 4800 cyberdeck's tests use (tests/presets/sample-export.json):
+    // the mod and the Deck Panel must read the same files. Keep the two copies identical.
+    systemProperty 'deckSample', rootProject.file('docs/sample-export.json').absolutePath
     testLogging { events 'passed', 'failed'; exceptionFormat 'full' }
 }
 
