@@ -1,8 +1,8 @@
 {
   "keybindpresets.button.preset": "Preset: %s ▾",
-  "keybindpresets.button.preset.tooltip": "Keybind presets: switch, save, export or import whole sets of keys",
+  "keybindpresets.button.preset.tooltip": "Keystash: switch, save, export or import whole sets of keys",
 
-  "keybindpresets.title": "Keybind Presets",
+  "keybindpresets.title": "Keystash: Keybind Presets",
   "keybindpresets.subtitle": "Keys you change in Key Binds are saved into the preset that's on.",
   "keybindpresets.default": "Default",
   "keybindpresets.list.default_info": "Each mod's own keys",

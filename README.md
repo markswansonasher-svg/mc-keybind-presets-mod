@@ -1,4 +1,4 @@
-# Keybind Presets (Minecraft 1.20.1, Forge + Fabric)
+# Keystash: Keybind Presets (Minecraft 1.20.1, Forge + Fabric)
 
 Adds **presets** to Minecraft's Key Binds screen: save whole sets of keys, switch between them, export and import them. A server can offer its own preset, and players with the mod are asked **"Add and switch to the server preset?"** when they join.
 
