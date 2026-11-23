@@ -20,6 +20,22 @@ It was made for the [Apache 4800 cyberdeck](https://github.com/markswansonasher-
 * Keys a preset doesn't list keep what you have. Keys for mods you don't have are skipped.
 * On Forge, a key can need Shift, Ctrl or Alt held too. Fabric doesn't have that, so it's ignored there.
 
+### The Presets screen
+
+Your presets are on the left. Pick one and the right side shows **what switching to it would change**: every key
+that would move (old key → new key), how many keys are for mods you don't have, and any key bundles it adds.
+Double-click a preset to switch to it.
+
+### Works with other keybind mods
+
+* **[Controlling](https://www.curseforge.com/minecraft/mc-mods/controlling)**: its search box and the Preset button sit side by side.
+* **[KeyBind Bundles](https://www.curseforge.com/minecraft/mc-mods/keybind-bundles)** (Forge): your bundles are saved in your presets and exported with them. Switching to a preset (or a server's preset) adds the bundles it brings that you don't have yet; yours are never changed or removed.
+
+### Languages
+
+All the mod's text is in `assets/keybindpresets/lang/en_us.json`. To translate it, copy that file to your language's
+code (for example `de_de.json`), translate the right-hand side, and send it as a pull request.
+
 **Fabric needs Fabric API** (almost every Fabric pack has it). Forge needs nothing extra.
 
 ## For servers

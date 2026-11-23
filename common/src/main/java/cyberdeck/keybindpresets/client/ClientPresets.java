@@ -32,10 +32,10 @@ public final class ClientPresets {
             String a = s.active();
             if (PresetStore.DEFAULT.equalsIgnoreCase(a)) {
                 if (!KeyApplier.allDefault()) {
-                    String n = s.freeName("My keys");
+                    String n = s.freeName(defaultName());
                     s.save(KeyApplier.current(n, ""));
                     s.setActive(n);
-                    toast("Your keys were saved", "as the preset \"" + n + "\".");
+                    toast(tr("keybindpresets.toast.keys_saved"), tr("keybindpresets.toast.keys_saved_msg", n));
                 }
                 return;
             }
@@ -61,7 +61,7 @@ public final class ClientPresets {
             }
         } catch (IOException e) {
             Constants.LOG.error("Couldn't switch preset", e);
-            toast("Couldn't switch preset", e.getMessage());
+            toastError("keybindpresets.toast.switch_failed", e);
         }
     }
 
@@ -77,15 +77,30 @@ public final class ClientPresets {
             s.save(mine);
             int n = KeyApplier.apply(mine);
             s.setActive(name);
-            toast("Switched to \"" + name + "\"", n + " keys set. Switch back any time in Key Binds.");
+            toast(tr("keybindpresets.toast.switched", name), tr("keybindpresets.toast.switched_keys", n));
         } catch (IOException e) {
             Constants.LOG.error("Couldn't add the server preset", e);
-            toast("Couldn't add the server preset", e.getMessage());
+            toastError("keybindpresets.toast.server_failed", e);
         }
     }
 
-    public static void toast(String title, String msg) {
-        SystemToast.addOrUpdate(Minecraft.getInstance().getToasts(), SystemToast.SystemToastIds.TUTORIAL_HINT,
-                Component.literal(title), msg == null ? null : Component.literal(msg));
+    public static void toast(Component title, Component msg) {
+        SystemToast.addOrUpdate(Minecraft.getInstance().getToasts(), SystemToast.SystemToastIds.TUTORIAL_HINT, title, msg);
+    }
+
+    /** A failure toast: the title in the player's language, the error as it came. */
+    public static void toastError(String titleKey, Exception e) {
+        toast(tr(titleKey), e.getMessage() == null ? null : Component.literal(e.getMessage()));
+    }
+
+    /** Text from the language file (assets/keybindpresets/lang/en_us.json and friends). */
+    public static Component tr(String key, Object... args) {
+        return Component.translatable(key, args);
+    }
+
+    /** Name for keys saved from Default: "My keys" (in the player's language), never a broken one. */
+    public static String defaultName() {
+        String n = PresetStore.clean(net.minecraft.client.resources.language.I18n.get("keybindpresets.save_as.default_name"));
+        return n.isEmpty() || n.startsWith("keybindpresets.") ? "My keys" : n;
     }
 }

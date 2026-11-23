@@ -40,6 +40,32 @@ The deck and the mod (phase 5: Forge + Fabric, Minecraft 1.20.1) must both follo
 | `keys[].default` | no | The mod's own default key, so "reset" works on the panel. |
 | `keys[].label` | no | Human name ("Show Recipe"), up to 120 characters. Display only. |
 | `keys[].category` | no | Minecraft category name, for grouping on the panel. Display only. |
+| `bundles` | no | Key bundles for the [KeyBind Bundles](https://www.curseforge.com/minecraft/mc-mods/keybind-bundles) mod (Forge). See below. |
+
+### Key bundles (optional)
+
+KeyBind Bundles turns one key into a radial menu of other keys. A preset can carry those bundles, so a server can hand
+them out with its keys. The mod saves them when it saves your keys (if KeyBind Bundles is installed) and, when you switch
+to a preset, adds the bundles you don't have yet. Bundles you already have are never changed or removed.
+
+```json
+"bundles": [
+  {"id": "0f8fad5b-d9cb-469f-a165-70867728950e", "name": "Maps", "bookmark": 0,
+   "entries": [
+     {"key": "key.minimap.waypoint", "title": "Waypoint", "icon": "minecraft:compass"},
+     {"key": "key.jei.showRecipe",   "title": "Recipe"}
+   ]}
+]
+```
+
+| Field | Required | What it is |
+|---|---|---|
+| `bundles[].id` | yes | The bundle's UUID. Its own key is `key.keybindbundles.bundle_<id>` in `keys`. |
+| `bundles[].name` | no | Shown in the game, up to 60 characters. |
+| `bundles[].entries` | no | Up to 100. `key` is a key `id` (same rule as `keys[].id`), `title` up to 120 characters, `icon` an item id like `minecraft:compass`. |
+| `bundles[].bookmark` | no | Which entry (counting from 0) a quick tap uses; -1 or missing = none. |
+
+At most 100 bundles. A broken bundle or entry is left out instead of refusing the file.
 
 Rules for both sides:
 

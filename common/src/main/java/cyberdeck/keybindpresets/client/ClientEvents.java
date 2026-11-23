@@ -28,13 +28,13 @@ public final class ClientEvents {
     /** A screen finished building: add the preset button to Key Binds. */
     public static void onScreenInit(Screen screen, Consumer<AbstractWidget> add) {
         if (!(screen instanceof KeyBindsScreen)) return;
-        String active = ClientPresets.store().active();
+        String active = PresetsScreen.displayName(ClientPresets.store().active());
         String label = active.length() > 14 ? active.substring(0, 13) + "…" : active;
-        add.accept(Button.builder(Component.literal("Preset: " + label + " ▾"),
+        // Top left, 18 high: clear of the screen's title and of the search box Controlling puts at y=22.
+        add.accept(Button.builder(ClientPresets.tr("keybindpresets.button.preset", label),
                         b -> Minecraft.getInstance().setScreen(new PresetsScreen(screen)))
-                .bounds(6, 6, 140, 20)
-                .tooltip(net.minecraft.client.gui.components.Tooltip.create(Component.literal(
-                        "Keybind presets: switch, save, export or import whole sets of keys")))
+                .bounds(4, 2, 130, 18)
+                .tooltip(net.minecraft.client.gui.components.Tooltip.create(ClientPresets.tr("keybindpresets.button.preset.tooltip")))
                 .build());
     }
 
@@ -77,11 +77,8 @@ public final class ClientEvents {
     }
 
     private static Screen prompt(Pending p) {
-        Component title = Component.literal(p.update() ? "The server's keybind preset changed"
-                : "This server has a keybind preset");
-        Component msg = Component.literal("\"" + p.preset().name() + "\" sets " + p.preset().keys().size()
-                + " keys.\n\nAdd it to your presets and switch to it?\n\nYour own keys are saved first. "
-                + "Switch back any time: Options > Controls > Key Binds > Preset.");
+        Component title = ClientPresets.tr(p.update() ? "keybindpresets.prompt.title_changed" : "keybindpresets.prompt.title_new");
+        Component msg = ClientPresets.tr("keybindpresets.prompt.message", p.preset().name(), p.preset().keys().size());
         return new ConfirmScreen(yes -> {
             try {
                 ClientPresets.store().setAnswered(p.server(), p.hash());
@@ -90,7 +87,7 @@ public final class ClientEvents {
             }
             if (yes) ClientPresets.addServerPreset(p.preset(), p.server());
             Minecraft.getInstance().setScreen(null);
-        }, title, msg, Component.literal("Add and switch"), Component.literal("No thanks"));
+        }, title, msg, ClientPresets.tr("keybindpresets.prompt.yes"), ClientPresets.tr("keybindpresets.prompt.no"));
     }
 
     /** Shown on our screen's preset list: is this the one that's on? */

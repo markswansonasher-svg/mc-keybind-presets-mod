@@ -5,6 +5,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 
 import java.util.function.Consumer;
@@ -17,8 +18,8 @@ public class NameScreen extends Screen {
     private EditBox box;
     private Button ok;
 
-    public NameScreen(PresetsScreen parent, String title, String start, Consumer<String> done) {
-        super(Component.literal(title));
+    public NameScreen(PresetsScreen parent, Component title, String start, Consumer<String> done) {
+        super(title);
         this.parent = parent;
         this.start = start;
         this.done = done;
@@ -26,13 +27,13 @@ public class NameScreen extends Screen {
 
     @Override
     protected void init() {
-        box = new EditBox(font, width / 2 - 100, height / 2 - 20, 200, 20, Component.literal("Name"));
+        box = new EditBox(font, width / 2 - 100, height / 2 - 20, 200, 20, ClientPresets.tr("keybindpresets.name.field"));
         box.setMaxLength(60);
         box.setValue(start);
         box.setResponder(s -> ok.active = !PresetStore.clean(s).isEmpty() && !PresetStore.DEFAULT.equalsIgnoreCase(PresetStore.clean(s)));
         addRenderableWidget(box);
-        ok = addRenderableWidget(Button.builder(Component.literal("OK"), b -> finish()).bounds(width / 2 - 100, height / 2 + 10, 98, 20).build());
-        addRenderableWidget(Button.builder(Component.literal("Cancel"), b -> onClose()).bounds(width / 2 + 2, height / 2 + 10, 98, 20).build());
+        ok = addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, b -> finish()).bounds(width / 2 - 100, height / 2 + 10, 98, 20).build());
+        addRenderableWidget(Button.builder(CommonComponents.GUI_CANCEL, b -> onClose()).bounds(width / 2 + 2, height / 2 + 10, 98, 20).build());
         setInitialFocus(box);
     }
 

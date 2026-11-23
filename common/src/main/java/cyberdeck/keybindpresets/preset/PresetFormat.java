@@ -30,6 +30,10 @@ public final class PresetFormat {
     static final Pattern KEY_NAME = Pattern.compile("^key\\.(keyboard|mouse)\\.[a-z0-9.]{1,30}$");
     static final Pattern MC_VERSION = Pattern.compile("^\\d+\\.\\d+(\\.\\d+)?$");
     static final Set<String> MODIFIERS = Set.of("NONE", "SHIFT", "CONTROL", "ALT");
+    public static final int MAX_BUNDLES = 100;
+    public static final int MAX_BUNDLE_ENTRIES = 100;
+    static final Pattern UUID = Pattern.compile("^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$");
+    static final Pattern ITEM_ID = Pattern.compile("^[a-z0-9_.-]{1,60}:[a-z0-9_./-]{1,120}$");
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 
     private PresetFormat() {}
@@ -73,7 +77,74 @@ public final class PresetFormat {
         String name = text(str(o, "name"), 60).trim();
         String mc = str(o, "minecraft");
         return new Preset(name.isEmpty() ? "Server preset" : name, MC_VERSION.matcher(mc).matches() ? mc : "",
-                keys, text(str(o, "source"), 200));
+                keys, text(str(o, "source"), 200), parseBundles(o.get("bundles")));
+    }
+
+    /**
+     * The optional "bundles" list (KeyBind Bundles mod). Also reads that mod's own file (keybind_bundles.json),
+     * whose icons are objects ({"id": "minecraft:compass", "Count": 1}) instead of plain item ids.
+     * Lenient: a broken bundle or entry is left out rather than refusing the whole preset.
+     */
+    public static List<Bundle> parseBundles(JsonElement el) {
+        List<Bundle> out = new ArrayList<>();
+        if (el == null || !el.isJsonArray()) return out;
+        Set<String> seen = new HashSet<>();
+        for (JsonElement e : el.getAsJsonArray()) {
+            if (out.size() >= MAX_BUNDLES) break;
+            if (!e.isJsonObject()) continue;
+            JsonObject b = e.getAsJsonObject();
+            String id = str(b, "id").toLowerCase(Locale.ROOT);
+            if (!UUID.matcher(id).matches() || !seen.add(id)) continue;
+            List<Bundle.Entry> entries = new ArrayList<>();
+            if (b.has("entries") && b.get("entries").isJsonArray()) {
+                for (JsonElement x : b.getAsJsonArray("entries")) {
+                    if (entries.size() >= MAX_BUNDLE_ENTRIES) break;
+                    if (!x.isJsonObject()) continue;
+                    JsonObject en = x.getAsJsonObject();
+                    String key = str(en, "key");
+                    if (!KEY_ID.matcher(key).matches()) continue;
+                    JsonElement ic = en.get("icon");
+                    String icon = ic != null && ic.isJsonObject() ? str(ic.getAsJsonObject(), "id") : str(en, "icon");
+                    entries.add(new Bundle.Entry(key, text(str(en, "title"), 120), ITEM_ID.matcher(icon).matches() ? icon : ""));
+                }
+            }
+            int bookmark = -1;
+            try {
+                if (b.has("bookmark")) bookmark = b.get("bookmark").getAsInt();
+            } catch (RuntimeException ignored) {
+            }
+            if (bookmark < -1 || bookmark >= entries.size()) bookmark = -1;
+            String name = text(str(b, "name"), 60).trim();
+            out.add(new Bundle(id, name.isEmpty() ? "Bundle" : name, entries, bookmark));
+        }
+        return out;
+    }
+
+    /** One bundle as JSON. forTheMod: the KeyBind Bundles mod's own shape (icons as item objects). */
+    public static JsonObject bundleJson(Bundle b, boolean forTheMod) {
+        JsonObject o = new JsonObject();
+        o.addProperty("id", b.id());
+        o.addProperty("name", b.name());
+        JsonArray arr = new JsonArray();
+        for (Bundle.Entry en : b.entries()) {
+            JsonObject e = new JsonObject();
+            e.addProperty("key", en.key());
+            e.addProperty("title", en.title());
+            if (!en.icon().isEmpty()) {
+                if (forTheMod) {
+                    JsonObject item = new JsonObject();
+                    item.addProperty("id", en.icon());
+                    item.addProperty("Count", 1);
+                    e.add("icon", item);
+                } else {
+                    e.addProperty("icon", en.icon());
+                }
+            }
+            arr.add(e);
+        }
+        o.add("entries", arr);
+        if (forTheMod || b.bookmark() >= 0) o.addProperty("bookmark", b.bookmark());
+        return o;
     }
 
     /** JSON text for a preset. withSource: include our own "source" field (not for exports or the server). */
@@ -95,13 +166,23 @@ public final class PresetFormat {
             arr.add(e);
         }
         o.add("keys", arr);
+        if (!p.bundles().isEmpty()) {
+            JsonArray bs = new JsonArray();
+            for (Bundle b : p.bundles()) bs.add(bundleJson(b, false));
+            o.add("bundles", bs);
+        }
         return GSON.toJson(o);
     }
 
-    /** Fingerprint of what a preset does (name + keys), to notice when a server's preset changed. */
+    /** Fingerprint of what a preset does (name + keys + bundles), to notice when a server's preset changed. */
     public static String hash(Preset p) {
         StringBuilder sb = new StringBuilder(p.name()).append('\n');
         for (KeyEntry k : p.keys()) sb.append(k.id()).append('=').append(k.key()).append('+').append(k.modifier()).append('\n');
+        for (Bundle b : p.bundles()) {                        // adds nothing when there are none: older hashes stay the same
+            sb.append("bundle ").append(b.id()).append(' ').append(b.name()).append(' ').append(b.bookmark());
+            for (Bundle.Entry e : b.entries()) sb.append(' ').append(e.key()).append('|').append(e.title()).append('|').append(e.icon());
+            sb.append('\n');
+        }
         try {
             byte[] d = MessageDigest.getInstance("SHA-256").digest(sb.toString().getBytes(StandardCharsets.UTF_8));
             return HexFormat.of().formatHex(d, 0, 12);

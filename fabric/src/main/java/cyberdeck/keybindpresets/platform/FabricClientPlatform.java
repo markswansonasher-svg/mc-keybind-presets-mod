@@ -18,4 +18,7 @@ public class FabricClientPlatform implements IClientPlatform {
 
     @Override
     public boolean isDefault(KeyMapping km) { return km.isDefault(); }
+
+    @Override
+    public boolean hasModifiers() { return false; }
 }

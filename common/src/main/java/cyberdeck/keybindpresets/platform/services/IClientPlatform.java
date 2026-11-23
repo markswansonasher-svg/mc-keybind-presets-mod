@@ -14,4 +14,7 @@ public interface IClientPlatform {
     void resetToDefault(KeyMapping km);
 
     boolean isDefault(KeyMapping km);
+
+    /** Whether keys can need Shift/Ctrl/Alt held too (Forge yes, Fabric no). */
+    boolean hasModifiers();
 }
